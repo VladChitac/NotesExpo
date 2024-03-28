@@ -1,27 +1,46 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
-import React from 'react'
-import colors from '../misc/colors'
+import React from 'react';
+import { View, StyleSheet, TextInput } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import colors from '../misc/colors';
 
-const SearchBar = ({containerStyle}) => {
+const SearchBar = ({ containerStyle, value, onClear, onChangeText }) => {
   return (
-    <View style={[styles.container, {...containerStyle}]}>
-      <TextInput style={styles.searchBar} placeholder='Search here...'/>
+    <View style={[styles.container, { ...containerStyle }]}>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        style={styles.searchBar}
+        placeholder='Search here..'
+      />
+      {value ? (
+        <AntDesign
+          name='close'
+          size={20}
+          color={colors.BLUE}
+          onPress={onClear}
+          style={styles.clearIcon}
+        />
+      ) : null}
     </View>
-  )
-}
-
-export default SearchBar
+  );
+};
 
 const styles = StyleSheet.create({
-    container:{
-        
-    },
-    searchBar:{
-        borderWidth: 0.5,
-        borderColor: colors.AQUA,
-        height: 40,
-        borderRadius: 40,
-        paddingLeft: 15,
-        fontSize: 20,
-    }
-})
+  searchBar: {
+    borderWidth: 0.5,
+    borderColor: colors.AQUA ,
+    height: 40,
+    borderRadius: 40,
+    paddingLeft: 15,
+    fontSize: 20,
+  },
+  container: {
+    justifyContent: 'center',
+  },
+  clearIcon: {
+    position: 'absolute',
+    right: 10,
+  },
+});
+
+export default SearchBar;

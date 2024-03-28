@@ -1,15 +1,23 @@
 import { Modal, StatusBar, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, Keyboard } from 'react-native'
 import { Picker } from '@react-native-picker/picker';
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import colors from '../misc/colors'
 import CheckBtn from './CheckBtn';
 
 
-const NodeInputModel = ({ visible, onClose, onSubmit }) => {
+
+const NodeInputModel = ({ visible, onClose, onSubmit, note, isEdit }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const [selectedValue, setSelectedValue] = useState('Normal');
-    // console.log(selectedValue)
+
+    useEffect(() => {
+        if (isEdit){
+            setTitle(note.title)
+            setDesc(note.desc)
+            setSelectedValue(note.selectedValue)
+        }
+    }, [isEdit])
 
     const handleModalClose = () => {
         Keyboard.dismiss();
@@ -22,15 +30,22 @@ const NodeInputModel = ({ visible, onClose, onSubmit }) => {
 
     const handleSubmit = () => {
         if (!title.trim() && !desc.trim()) return onClose()
-        onSubmit(title, desc, selectedValue)
-        setTitle('')
-        setDesc('')
+
+        if (isEdit) {
+            onSubmit(title, desc, selectedValue, Date.now())
+        } else {
+            onSubmit(title, desc, selectedValue)
+            setTitle('')
+            setDesc('')
+        }
         onClose()
     }
 
     const closeModal = () => {
-        setTitle('')
-        setDesc('')
+        if (!isEdit) {
+            setTitle('')
+            setDesc('')
+        }
         onClose()
     }
 
@@ -78,13 +93,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: colors.BLUE,
         fontSize: 25,
-        color: 'black'
+        color: 'black',
     },
     title:{
         marginTop:40,
         height: 50,
         marginBottom: 15,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     decs:{
         height: 150,
